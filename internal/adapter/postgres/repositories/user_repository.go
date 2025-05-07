@@ -31,6 +31,10 @@ func (r *userRepository) Get(id uint) (*entities.User, error) {
 		&user.ID,
 		&user.Name,
 	); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errors.ErrUserNotFound
+		}
+
 		return nil, err
 	}
 

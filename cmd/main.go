@@ -45,9 +45,11 @@ func main() {
 
 	// Services
 	us := services.NewUserService(ur, or, pr, opr)
+	ors := services.NewOrderService(or, opr, ur)
 
 	// Controllers
 	uc := controllers.NewUserController(us)
+	oc := controllers.NewOrderController(ors)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
@@ -56,6 +58,8 @@ func main() {
 	})
 	mux.HandleFunc("GET /user/{id}", uc.Get)
 	mux.HandleFunc("POST /user/upload", uc.PostUsersData)
+	mux.HandleFunc("GET /order/{id}", oc.GetByID)
+	mux.HandleFunc("GET /orders", oc.Get)
 
 	port := config.Env.Port
 	server := &http.Server{

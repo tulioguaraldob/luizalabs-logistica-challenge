@@ -10,4 +10,5 @@ type Repository interface {
 	Get(id uint) (*entities.Order, error)
 	GetByInterval(startDate, endDate time.Time) ([]*entities.Order, error)
 	Add(order *entities.Order) error
+	GetAll() ([]*entities.Order, error)
 }

@@ -6,12 +6,14 @@ import (
 	"time"
 
 	"github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/entities"
+	"github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/errors"
 )
 
 const (
 	getOrderQuery            string = `SELECT * FROM orders o WHERE o.id = $1 ORDER BY o.id DESC`
-	getOrdersByIntervalQuery string = `SELECT * FROM orders o WHERE o.date >= $1 AND o.date <= $2 ORDER BY o.date ASC`
+	getOrdersByIntervalQuery string = `SELECT * FROM orders o WHERE o.date >= $1 AND o.date <= $2 ORDER BY o.date DESC`
 	createOrderQuery         string = `INSERT INTO orders (id, user_id, date) VALUES ($1, $2, $3)`
+	getAllOrdersQuery        string = `SELECT * FROM orders o ORDER BY o.id DESC`
 )
 
 type orderRepository struct {
@@ -32,6 +34,10 @@ func (r *orderRepository) Get(id uint) (*entities.Order, error) {
 		&order.UserID,
 		&order.Date,
 	); err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errors.ErrOrderNotFound
+		}
+
 		return nil, err
 	}
 
@@ -77,4 +83,31 @@ func (r *orderRepository) Add(order *entities.Order) error {
 	}
 
 	return nil
+}
+
+func (r *orderRepository) GetAll() ([]*entities.Order, error) {
+	rows, err := r.db.QueryContext(context.Background(), getAllOrdersQuery)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	orders := make([]*entities.Order, 0)
+	for rows.Next() {
+		order := new(entities.Order)
+		if err := rows.Scan(
+			&order.ID,
+			&order.UserID,
+			&order.Date,
+		); err != nil {
+			return nil, err
+		}
+		orders = append(orders, order)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return orders, nil
 }
