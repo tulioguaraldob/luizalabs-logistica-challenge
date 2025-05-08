@@ -85,7 +85,7 @@
 				
 				<option value="file14">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/services/mocks/user/mock_user_repository.go (0.0%)</option>
 				
-				<option value="file15">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/services/order_service.go (55.1%)</option>
+				<option value="file15">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/services/order_service.go (100.0%)</option>
 				
 				<option value="file16">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/services/user_service.go (90.9%)</option>
 				
@@ -1341,28 +1341,28 @@ func (s *orderService) GetAllOrdersProducts() ([]*order.Purchase, error) <span c
         <span class="cov8" title="1">return purchases, nil</span>
 }
 
-func (s *orderService) GetOrdersProductsByOrderId(orderId uint) ([]*order.Purchase, error) <span class="cov0" title="0">{
+func (s *orderService) GetOrdersProductsByOrderId(orderId uint) ([]*order.Purchase, error) <span class="cov8" title="1">{
         o, err := s.GetOrderById(orderId)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">u, err := s.userRepository.Get(o.UserID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">u, err := s.userRepository.Get(o.UserID)
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">ops, err := s.orderProductsRepository.GetByOrderID(o.ID)
-        if err != nil </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">ops, err := s.orderProductsRepository.GetByOrderID(o.ID)
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">total := 0.0
-        for _, p := range ops </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">total := 0.0
+        for _, p := range ops </span><span class="cov8" title="1">{
                 total += float64(p.Value)
         }</span>
 
-        <span class="cov0" title="0">purchase := &amp;order.Purchase{
+        <span class="cov8" title="1">purchase := &amp;order.Purchase{
                 UserID:   u.ID,
                 Name:     u.Name,
                 Order:    o,
@@ -1375,30 +1375,30 @@ func (s *orderService) GetOrdersProductsByOrderId(orderId uint) ([]*order.Purcha
         }, nil</span>
 }
 
-func (s *orderService) GetOrdersProductsByInterval(startDate, endDate time.Time) ([]*order.Purchase, error) <span class="cov0" title="0">{
+func (s *orderService) GetOrdersProductsByInterval(startDate, endDate time.Time) ([]*order.Purchase, error) <span class="cov8" title="1">{
         orders, err := s.GetOrdersInInterval(startDate, endDate)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return nil, err
         }</span>
 
-        <span class="cov0" title="0">purchases := make([]*order.Purchase, 0)
-        for _, o := range orders </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">purchases := make([]*order.Purchase, 0)
+        for _, o := range orders </span><span class="cov8" title="1">{
                 u, err := s.userRepository.Get(o.UserID)
-                if err != nil </span><span class="cov0" title="0">{
+                if err != nil </span><span class="cov8" title="1">{
                         return nil, err
                 }</span>
 
-                <span class="cov0" title="0">ops, err := s.orderProductsRepository.GetByOrderID(o.ID)
-                if err != nil </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">ops, err := s.orderProductsRepository.GetByOrderID(o.ID)
+                if err != nil </span><span class="cov8" title="1">{
                         return nil, err
                 }</span>
 
-                <span class="cov0" title="0">total := 0.0
-                for _, p := range ops </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">total := 0.0
+                for _, p := range ops </span><span class="cov8" title="1">{
                         total += float64(p.Value)
                 }</span>
 
-                <span class="cov0" title="0">purchase := &amp;order.Purchase{
+                <span class="cov8" title="1">purchase := &amp;order.Purchase{
                         UserID:   u.ID,
                         Name:     u.Name,
                         Order:    o,
@@ -1409,7 +1409,7 @@ func (s *orderService) GetOrdersProductsByInterval(startDate, endDate time.Time)
                 purchases = append(purchases, purchase)</span>
         }
 
-        <span class="cov0" title="0">return purchases, nil</span>
+        <span class="cov8" title="1">return purchases, nil</span>
 }
 </pre>
 		
