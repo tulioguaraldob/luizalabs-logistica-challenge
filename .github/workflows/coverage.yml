@@ -31,10 +31,10 @@ jobs:
           echo "coverage_percent=$coverage_percent" >> $GITHUB_OUTPUT
 
       - name: Generate Coverage Badge
-        uses: skjorten/go-coverage-badge@v1.3
+        uses: AlexBeauchemin/gobadge@v0.4.0
         with:
-          coverageFile: coverage/cover.out
-          outputFile: README.md
+          filename: coverage/cover.out
+          target: README.md
           countStatements: true
 
       - name: Verify Changed files
