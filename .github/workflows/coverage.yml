@@ -1,59 +1,61 @@
-name: Generate code coverage badge
+name: Go Test Coverage
 
 on:
+  push:
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
 
 jobs:
-  coverage:
+  test:
     runs-on: ubuntu-latest
-    name: Generate and update coverage badge
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          persist-credentials: false
-          fetch-depth: 0
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '>=1.18'
 
-      - name: Setup go
-        uses: actions/setup-go@v4
-        with:
-          go-version-file: 'go.mod'
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Run Make Coverage
-        run: make cover
+    - name: Run tests with coverage
+      run: go test -v -coverprofile=coverage.out ./...
 
-      - name: Get Coverage Percentage
-        id: coverage
-        run: |
-          coverage_percent=$(go tool cover -func coverage/cover.out | tail -n 1 | awk '{print $3}' | sed 's/%//')
-          echo "coverage_percent=$coverage_percent" >> $GITHUB_OUTPUT
+    - name: Convert coverage to Cobertura XML
+      uses: jandelgado/gcov2lcov@latest
+      with:
+        coverage-file: coverage.out
+        output-file: coverage.xml
 
-      - name: Generate Coverage Badge
-        uses: AlexBeauchemin/gobadge@v0.4.0
-        with:
-          filename: coverage/cover.out
-          target: README.md
-          countStatements: true
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v4
+      with:
+        files: coverage.xml
+        fail_ci_if_error: true
+        verbose: true
 
-      - name: Verify Changed files
-        uses: tj-actions/verify-changed-files@v16
-        id: verify-changed-files
-        with:
-          files: README.md
+  coverage-badge:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Commit changes
-        if: steps.verify-changed-files.outputs.files_changed == 'true'
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add README.md
-          git commit -m "chore: Updated coverage badge."
+    - name: Get Go version
+      id: go_version
+      run: echo "::set-output name=version::$(go version | awk '{print $3}')"
 
-      - name: Push changes
-        if: steps.verify-changed-files.outputs.files_changed == 'true'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ github.token }}
-          branch: ${{ github.head_ref }}
+    - name: Generate coverage badge
+      uses: jossef/go-coverage-badge@v1.3.0
+      with:
+        coverage-file: coverage.out
+        output: coverage.svg
+
+    - name: Update README with coverage badge
+      uses: anmol098/w3-total-cache-github-action@releases/v1.13
+      with:
+        file: README.md
+        replacer: '!\\[Coverage Status\\]\\(.*\\)'
+        to_value: '!\[Coverage Status\](./coverage.svg)'
+        commit_message: "docs(coverage): update coverage badge"
+        github_token: ${{ github.token }}
