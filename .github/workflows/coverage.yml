@@ -22,7 +22,7 @@ jobs:
       run: go test -v -coverprofile=coverage.out ./...
 
     - name: Convert coverage to Cobertura XML
-      uses: jandelgado/gcov2lcov@latest
+      uses: jandelgado/gcov2lcov@v1.1.1
       with:
         coverage-file: coverage.out
         output-file: coverage.xml
