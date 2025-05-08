@@ -71,14 +71,81 @@ func (s *orderService) GetAllOrders() ([]*entities.Order, error) {
 	return orders, nil
 }
 
-func (s *orderService) GetAllOrdersWithProducts() ([]*order.Purchase, error) {
-	orders, err := s.repository.GetAll()
+func (s *orderService) GetAllOrdersProducts() ([]*order.Purchase, error) {
+	orders, err := s.GetAllOrders()
 	if err != nil {
 		return nil, err
 	}
 
-	if len(orders) == 0 {
-		return nil, errors.ErrNoOrders
+	purchases := make([]*order.Purchase, 0)
+	for _, o := range orders {
+		u, err := s.userRepository.Get(o.UserID)
+		if err != nil {
+			return nil, err
+		}
+
+		ops, err := s.orderProductsRepository.GetByOrderID(o.ID)
+		if err != nil {
+			return nil, err
+		}
+
+		total := 0.0
+		for _, p := range ops {
+			total += float64(p.Value)
+		}
+
+		purchase := &order.Purchase{
+			UserID:   u.ID,
+			Name:     u.Name,
+			Order:    o,
+			Products: ops,
+			Total:    total,
+		}
+
+		purchases = append(purchases, purchase)
+	}
+
+	return purchases, nil
+}
+
+func (s *orderService) GetOrdersProductsByOrderId(orderId uint) ([]*order.Purchase, error) {
+	o, err := s.GetOrderById(orderId)
+	if err != nil {
+		return nil, err
+	}
+
+	u, err := s.userRepository.Get(o.UserID)
+	if err != nil {
+		return nil, err
+	}
+
+	ops, err := s.orderProductsRepository.GetByOrderID(o.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	total := 0.0
+	for _, p := range ops {
+		total += float64(p.Value)
+	}
+
+	purchase := &order.Purchase{
+		UserID:   u.ID,
+		Name:     u.Name,
+		Order:    o,
+		Products: ops,
+		Total:    total,
+	}
+
+	return []*order.Purchase{
+		purchase,
+	}, nil
+}
+
+func (s *orderService) GetOrdersProductsByInterval(startDate, endDate time.Time) ([]*order.Purchase, error) {
+	orders, err := s.GetOrdersInInterval(startDate, endDate)
+	if err != nil {
+		return nil, err
 	}
 
 	purchases := make([]*order.Purchase, 0)

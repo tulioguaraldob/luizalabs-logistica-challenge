@@ -1,0 +1,1640 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>cmd: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/tulioguaraldob/luizalabs-logistica-challenge/cmd/main.go (0.0%)</option>
+				
+				<option value="file1">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/adapter/controllers/order_controller.go (0.0%)</option>
+				
+				<option value="file2">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/adapter/controllers/user_controller.go (0.0%)</option>
+				
+				<option value="file3">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/adapter/postgres/migration.go (0.0%)</option>
+				
+				<option value="file4">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/adapter/postgres/postgres.go (0.0%)</option>
+				
+				<option value="file5">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/adapter/postgres/repositories/order_product_repository.go (94.1%)</option>
+				
+				<option value="file6">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/adapter/postgres/repositories/order_repository.go (94.6%)</option>
+				
+				<option value="file7">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/adapter/postgres/repositories/product_repository.go (100.0%)</option>
+				
+				<option value="file8">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/adapter/postgres/repositories/user_repository.go (92.3%)</option>
+				
+				<option value="file9">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/config/config.go (0.0%)</option>
+				
+				<option value="file10">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/order/schema.go (0.0%)</option>
+				
+				<option value="file11">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/services/mocks/order/mock_order_repository.go (0.0%)</option>
+				
+				<option value="file12">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/services/mocks/order_products/mock_order_products_repository.go (0.0%)</option>
+				
+				<option value="file13">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/services/mocks/product/mock_product_repository.go (0.0%)</option>
+				
+				<option value="file14">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/services/mocks/user/mock_user_repository.go (0.0%)</option>
+				
+				<option value="file15">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/services/order_service.go (55.1%)</option>
+				
+				<option value="file16">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/services/user_service.go (90.9%)</option>
+				
+				<option value="file17">github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/user/schema.go (0.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package main
+
+import (
+        "context"
+        "fmt"
+        "log"
+        "net/http"
+        "os"
+        "os/signal"
+        "syscall"
+        "time"
+
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/adapter/controllers"
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/adapter/postgres"
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/adapter/postgres/repositories"
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/config"
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/services"
+)
+
+func main() <span class="cov0" title="0">{
+        // Config
+        if err := config.LoadEnvs(); err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("Failed to load environment variables. Details: %s", err.Error())
+        }</span>
+
+        // Postgres
+        <span class="cov0" title="0">dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable",
+                config.Env.PostgresUser,
+                config.Env.PostgresPassword,
+                config.Env.PostgresHost,
+                config.Env.PostgresPort,
+                config.Env.PostgresDb,
+        )
+        db, err := postgres.New(dsn)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Fatal(err)
+        }</span>
+        <span class="cov0" title="0">defer postgres.Close(db)
+
+        // Repositories
+        pr := repositories.NewProductRepository(db)
+        or := repositories.NewOrderRepository(db)
+        ur := repositories.NewUserRepository(db)
+        opr := repositories.NewOrderProductRepository(db)
+
+        // Services
+        us := services.NewUserService(ur, or, pr, opr)
+        ors := services.NewOrderService(or, opr, ur)
+
+        // Controllers
+        uc := controllers.NewUserController(us)
+        oc := controllers.NewOrderController(ors)
+
+        mux := http.NewServeMux()
+        mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) </span><span class="cov0" title="0">{
+                w.WriteHeader(http.StatusOK)
+                w.Write([]byte("I heard that Tulio was approved on LuizaLabs! :)"))
+        }</span>)
+        <span class="cov0" title="0">mux.HandleFunc("GET /user/{id}", uc.Get)
+        mux.HandleFunc("POST /user/upload", uc.PostUsersData)
+        mux.HandleFunc("GET /order/{id}", oc.GetByID)
+        mux.HandleFunc("GET /orders", oc.Get)
+
+        port := config.Env.Port
+        server := &amp;http.Server{
+                Addr:    ":" + port,
+                Handler: mux,
+        }
+
+        ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+        defer cancel()
+
+        go func() </span><span class="cov0" title="0">{
+                log.Printf("Running on port: %s\n", port)
+                if err := server.ListenAndServe(); err != nil </span><span class="cov0" title="0">{
+                        log.Fatalf("Failed to listen and serve HTTP server. Details: %s", err.Error())
+                }</span>
+        }()
+        <span class="cov0" title="0">&lt;-ctx.Done()
+
+        quit := make(chan os.Signal, 1)
+        signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+        &lt;-quit
+
+        if err := server.Shutdown(ctx); err != nil </span><span class="cov0" title="0">{
+                log.Fatalf("Failed to shutdown server. Details: %s", err.Error())
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package controllers
+
+import (
+        "encoding/json"
+        "net/http"
+        "strconv"
+        "time"
+
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/errors"
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/order"
+)
+
+type orderController struct {
+        service order.Service
+}
+
+func NewOrderController(service order.Service) *orderController <span class="cov0" title="0">{
+        return &amp;orderController{
+                service: service,
+        }
+}</span>
+
+func (c *orderController) Get(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        idStr := r.URL.Query().Get("id")
+        startDateStr := r.URL.Query().Get("startDate")
+        endDateStr := r.URL.Query().Get("endDate")
+
+        // If the ID is passed will always consider the ID first
+        if idStr != "" </span><span class="cov0" title="0">{
+                id, err := strconv.ParseInt(idStr, 10, 64)
+                if err != nil </span><span class="cov0" title="0">{
+                        w.WriteHeader(http.StatusBadRequest)
+                        w.Write([]byte(err.Error()))
+                        return
+                }</span>
+
+                <span class="cov0" title="0">purchases, err := c.service.GetOrdersProductsByOrderId(uint(id))
+                if err != nil </span><span class="cov0" title="0">{
+                        if err == errors.ErrOrderNotFound </span><span class="cov0" title="0">{
+                                w.WriteHeader(http.StatusNotFound)
+                                w.Write([]byte(err.Error()))
+                                return
+                        }</span>
+
+                        <span class="cov0" title="0">w.WriteHeader(http.StatusInternalServerError)
+                        w.Write([]byte(err.Error()))
+                        return</span>
+                }
+
+                <span class="cov0" title="0">purchaseRes := make([]*order.PurchaseResponse, 0)
+                for _, purchase := range purchases </span><span class="cov0" title="0">{
+                        purchaseRes = append(purchaseRes, order.FromPurchaseToResponse(purchase))
+                }</span>
+
+                <span class="cov0" title="0">res, err := json.Marshal(purchaseRes)
+                if err != nil </span><span class="cov0" title="0">{
+                        w.WriteHeader(http.StatusFound)
+                        w.Write([]byte(err.Error()))
+                        return
+                }</span>
+
+                <span class="cov0" title="0">w.WriteHeader(http.StatusOK)
+                w.Write(res)
+                return</span>
+        }
+
+        <span class="cov0" title="0">if startDateStr != "" </span><span class="cov0" title="0">{
+                startDate, err := time.Parse(time.DateOnly, startDateStr)
+                if err != nil </span><span class="cov0" title="0">{
+                        w.WriteHeader(http.StatusBadRequest)
+                        w.Write([]byte("Invalid startDate format. Expected 2006-01-02"))
+                        return
+                }</span>
+
+                <span class="cov0" title="0">endDate := time.Now()
+                if endDateStr != "" </span><span class="cov0" title="0">{
+                        parsedEndDate, err := time.Parse(time.DateOnly, endDateStr)
+                        if err != nil </span><span class="cov0" title="0">{
+                                w.WriteHeader(http.StatusBadRequest)
+                                w.Write([]byte("Invalid endDate format. Expected 2006-01-02"))
+                                return
+                        }</span>
+
+                        <span class="cov0" title="0">endDate = parsedEndDate</span>
+                }
+
+                <span class="cov0" title="0">purchases, err := c.service.GetOrdersProductsByInterval(startDate, endDate)
+                if err != nil </span><span class="cov0" title="0">{
+                        if err == errors.ErrInvalidDateInterval </span><span class="cov0" title="0">{
+                                w.WriteHeader(http.StatusBadRequest)
+                                w.Write([]byte(err.Error()))
+                                return
+                        }</span>
+
+                        <span class="cov0" title="0">if err == errors.ErrNoOrders </span><span class="cov0" title="0">{
+                                w.WriteHeader(http.StatusNotFound)
+                                w.Write([]byte(err.Error()))
+                                return
+                        }</span>
+
+                        <span class="cov0" title="0">w.WriteHeader(http.StatusInternalServerError)
+                        w.Write([]byte(err.Error()))
+                        return</span>
+                }
+
+                <span class="cov0" title="0">purchaseRes := make([]*order.PurchaseResponse, 0)
+                for _, purchase := range purchases </span><span class="cov0" title="0">{
+                        purchaseRes = append(purchaseRes, order.FromPurchaseToResponse(purchase))
+                }</span>
+
+                <span class="cov0" title="0">res, err := json.Marshal(purchaseRes)
+                if err != nil </span><span class="cov0" title="0">{
+                        w.WriteHeader(http.StatusFound)
+                        w.Write([]byte(err.Error()))
+                        return
+                }</span>
+
+                <span class="cov0" title="0">w.WriteHeader(http.StatusOK)
+                w.Write(res)
+                return</span>
+        }
+
+        <span class="cov0" title="0">purchases, err := c.service.GetAllOrdersProducts()
+        if err != nil </span><span class="cov0" title="0">{
+                if err == errors.ErrInvalidDateInterval </span><span class="cov0" title="0">{
+                        w.WriteHeader(http.StatusBadRequest)
+                        w.Write([]byte(err.Error()))
+                        return
+                }</span>
+
+                <span class="cov0" title="0">if err == errors.ErrNoOrders </span><span class="cov0" title="0">{
+                        w.WriteHeader(http.StatusNotFound)
+                        w.Write([]byte(err.Error()))
+                        return
+                }</span>
+
+                <span class="cov0" title="0">w.WriteHeader(http.StatusInternalServerError)
+                w.Write([]byte(err.Error()))
+                return</span>
+        }
+
+        <span class="cov0" title="0">purchaseRes := make([]*order.PurchaseResponse, 0)
+        for _, purchase := range purchases </span><span class="cov0" title="0">{
+                purchaseRes = append(purchaseRes, order.FromPurchaseToResponse(purchase))
+        }</span>
+
+        <span class="cov0" title="0">res, err := json.Marshal(purchaseRes)
+        if err != nil </span><span class="cov0" title="0">{
+                w.WriteHeader(http.StatusFound)
+                w.Write([]byte(err.Error()))
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.WriteHeader(http.StatusOK)
+        w.Write(res)</span>
+}
+
+func (c *orderController) GetByID(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        idStr := r.PathValue("id")
+        id, err := strconv.ParseInt(idStr, 10, 64)
+        if err != nil </span><span class="cov0" title="0">{
+                w.WriteHeader(http.StatusBadRequest)
+                w.Write([]byte(err.Error()))
+                return
+        }</span>
+
+        <span class="cov0" title="0">o, err := c.service.GetOrderById(uint(id))
+        if err != nil </span><span class="cov0" title="0">{
+                if err == errors.ErrOrderNotFound </span><span class="cov0" title="0">{
+                        w.WriteHeader(http.StatusNotFound)
+                        w.Write([]byte(err.Error()))
+                        return
+                }</span>
+
+                <span class="cov0" title="0">w.WriteHeader(http.StatusInternalServerError)
+                w.Write([]byte(err.Error()))
+                return</span>
+        }
+
+        <span class="cov0" title="0">res, err := json.Marshal(order.FromOrderToResponse(o))
+        if err != nil </span><span class="cov0" title="0">{
+                w.WriteHeader(http.StatusFound)
+                w.Write([]byte(err.Error()))
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.WriteHeader(http.StatusOK)
+        w.Write(res)</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package controllers
+
+import (
+        "encoding/json"
+        "net/http"
+        "strconv"
+
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/errors"
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/user"
+)
+
+type userController struct {
+        service user.Service
+}
+
+func NewUserController(service user.Service) *userController <span class="cov0" title="0">{
+        return &amp;userController{
+                service: service,
+        }
+}</span>
+
+func (c *userController) Get(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        idStr := r.PathValue("id")
+        id, err := strconv.ParseInt(idStr, 10, 64)
+        if err != nil </span><span class="cov0" title="0">{
+                w.WriteHeader(http.StatusBadRequest)
+                w.Write([]byte(err.Error()))
+                return
+        }</span>
+
+        <span class="cov0" title="0">u, err := c.service.GetUserByID(uint(id))
+        if err != nil </span><span class="cov0" title="0">{
+                if err == errors.ErrUserNotFound </span><span class="cov0" title="0">{
+                        w.WriteHeader(http.StatusNotFound)
+                        w.Write([]byte(err.Error()))
+                        return
+                }</span>
+
+                <span class="cov0" title="0">w.WriteHeader(http.StatusBadRequest)
+                w.Write([]byte(err.Error()))
+                return</span>
+        }
+
+        <span class="cov0" title="0">res, err := json.Marshal(user.FromUserToResponse(u))
+        if err != nil </span><span class="cov0" title="0">{
+                w.WriteHeader(http.StatusFound)
+                w.Write([]byte(err.Error()))
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.WriteHeader(http.StatusOK)
+        w.Write(res)</span>
+}
+
+func (c *userController) PostUsersData(w http.ResponseWriter, r *http.Request) <span class="cov0" title="0">{
+        // Max Memory up to 5 MB (10 * 1024 * 1024)
+        if err := r.ParseMultipartForm(5 &lt;&lt; 20); err != nil </span><span class="cov0" title="0">{
+                w.WriteHeader(http.StatusBadRequest)
+                w.Write([]byte(err.Error()))
+                return
+        }</span>
+
+        <span class="cov0" title="0">file, _, err := r.FormFile("users_data")
+        if err != nil </span><span class="cov0" title="0">{
+                w.WriteHeader(http.StatusBadRequest)
+                w.Write([]byte(err.Error()))
+                return
+        }</span>
+        <span class="cov0" title="0">defer file.Close()
+
+        processedLines := c.service.LoadUsersDataFile(file)
+        userFileRes := &amp;user.UserFileResponse{
+                Message:        "file processed successfully!",
+                ProcessedLines: processedLines,
+        }
+
+        res, err := json.Marshal(userFileRes)
+        if err != nil </span><span class="cov0" title="0">{
+                w.WriteHeader(http.StatusBadRequest)
+                w.Write([]byte(err.Error()))
+                return
+        }</span>
+
+        <span class="cov0" title="0">w.WriteHeader(http.StatusCreated)
+        w.Write(res)</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package postgres
+
+import (
+        "github.com/golang-migrate/migrate/v4"
+        _ "github.com/golang-migrate/migrate/v4/database/postgres"
+        _ "github.com/golang-migrate/migrate/v4/source/file"
+)
+
+func runMigrations(dataSourceName string) error <span class="cov0" title="0">{
+        m, err := migrate.New("file://./config/database/migrations", dataSourceName)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">m.Up()
+        return nil</span>
+}
+
+func downMigrations(dataSourceName string) error <span class="cov0" title="0">{
+        m, err := migrate.New("file://./config/database/migrations", dataSourceName)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov0" title="0">m.Down()
+        return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file4" style="display: none">package postgres
+
+import (
+        "database/sql"
+        "fmt"
+        "log"
+
+        _ "github.com/lib/pq"
+)
+
+// New opens a Postgres connection using the native lib
+func New(dataSourceName string) (*sql.DB, error) <span class="cov0" title="0">{
+        db, err := sql.Open("postgres", dataSourceName)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Printf("Failed to open Postgres connection. Details: %s\n", err.Error())
+                return nil, err
+        }</span>
+
+        // if err := downMigrations(dataSourceName); err != nil {
+        //         log.Printf("Failed to apply Postgres down migrations. Details: %s\n", err.Error())
+        //         return nil, err
+        // }
+
+        <span class="cov0" title="0">if err := runMigrations(dataSourceName); err != nil </span><span class="cov0" title="0">{
+                log.Printf("Failed to apply Postgres migrations. Details: %s\n", err.Error())
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">return db, nil</span>
+}
+
+// Close will close an open Postgres connection if the connection is valid and not nil
+//
+// Must be used in the main entry of the application
+func Close(db *sql.DB) error <span class="cov0" title="0">{
+        if db == nil </span><span class="cov0" title="0">{
+                return fmt.Errorf("must have a valid Postgres connection to be closed")
+        }</span>
+
+        <span class="cov0" title="0">return db.Close()</span>
+}
+</pre>
+		
+		<pre class="file" id="file5" style="display: none">package repositories
+
+import (
+        "context"
+        "database/sql"
+
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/entities"
+)
+
+const (
+        createOrderProductsQuery       string = `INSERT INTO order_products (order_id, product_id, value) VALUES ($1, $2, $3)`
+        getOrderProductsByOrderIdQuery string = `SELECT * FROM order_products op WHERE op.order_id = $1`
+)
+
+type orderProductRepository struct {
+        db *sql.DB
+}
+
+func NewOrderProductRepository(db *sql.DB) *orderProductRepository <span class="cov8" title="1">{
+        return &amp;orderProductRepository{
+                db: db,
+        }
+}</span>
+
+func (r *orderProductRepository) Add(orderProduct *entities.OrderProduct) error <span class="cov8" title="1">{
+        if _, err := r.db.ExecContext(
+                context.Background(),
+                createOrderProductsQuery,
+                orderProduct.OrderID,
+                orderProduct.ProductID,
+                orderProduct.Value,
+        ); err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (r *orderProductRepository) GetByOrderID(orderId uint) ([]*entities.OrderProduct, error) <span class="cov8" title="1">{
+        rows, err := r.db.QueryContext(context.Background(), getOrderProductsByOrderIdQuery, orderId)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer rows.Close()
+
+        orders := make([]*entities.OrderProduct, 0)
+        for rows.Next() </span><span class="cov8" title="1">{
+                orderProduct := new(entities.OrderProduct)
+                if err := rows.Scan(
+                        &amp;orderProduct.ID,
+                        &amp;orderProduct.OrderID,
+                        &amp;orderProduct.ProductID,
+                        &amp;orderProduct.Value,
+                ); err != nil </span><span class="cov8" title="1">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">orders = append(orders, orderProduct)</span>
+        }
+
+        <span class="cov8" title="1">if err := rows.Err(); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return orders, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file6" style="display: none">package repositories
+
+import (
+        "context"
+        "database/sql"
+        "time"
+
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/entities"
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/errors"
+)
+
+const (
+        getOrderQuery            string = `SELECT * FROM orders o WHERE o.id = $1 ORDER BY o.id DESC`
+        getOrdersByIntervalQuery string = `SELECT * FROM orders o WHERE o.date &gt;= $1 AND o.date &lt;= $2 ORDER BY o.date DESC`
+        createOrderQuery         string = `INSERT INTO orders (id, user_id, date) VALUES ($1, $2, $3)`
+        getAllOrdersQuery        string = `SELECT * FROM orders o ORDER BY o.id DESC`
+)
+
+type orderRepository struct {
+        db *sql.DB
+}
+
+func NewOrderRepository(db *sql.DB) *orderRepository <span class="cov8" title="1">{
+        return &amp;orderRepository{
+                db: db,
+        }
+}</span>
+
+func (r *orderRepository) Get(id uint) (*entities.Order, error) <span class="cov8" title="1">{
+        order := new(entities.Order)
+        row := r.db.QueryRowContext(context.Background(), getOrderQuery, id)
+        if err := row.Scan(
+                &amp;order.ID,
+                &amp;order.UserID,
+                &amp;order.Date,
+        ); err != nil </span><span class="cov8" title="1">{
+                if err == sql.ErrNoRows </span><span class="cov8" title="1">{
+                        return nil, errors.ErrOrderNotFound
+                }</span>
+
+                <span class="cov8" title="1">return nil, err</span>
+        }
+
+        <span class="cov8" title="1">return order, nil</span>
+}
+
+func (r *orderRepository) GetByInterval(startDate, endDate time.Time) ([]*entities.Order, error) <span class="cov8" title="1">{
+        rows, err := r.db.QueryContext(context.Background(), getOrdersByIntervalQuery, startDate, endDate)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer rows.Close()
+
+        orders := make([]*entities.Order, 0)
+        for rows.Next() </span><span class="cov8" title="1">{
+                order := new(entities.Order)
+                if err := rows.Scan(
+                        &amp;order.ID,
+                        &amp;order.UserID,
+                        &amp;order.Date,
+                ); err != nil </span><span class="cov8" title="1">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">orders = append(orders, order)</span>
+        }
+
+        <span class="cov8" title="1">if err := rows.Err(); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return orders, nil</span>
+}
+
+func (r *orderRepository) Add(order *entities.Order) error <span class="cov8" title="1">{
+        if _, err := r.db.ExecContext(
+                context.Background(),
+                createOrderQuery,
+                order.ID,
+                order.UserID,
+                order.Date,
+        ); err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (r *orderRepository) GetAll() ([]*entities.Order, error) <span class="cov8" title="1">{
+        rows, err := r.db.QueryContext(context.Background(), getAllOrdersQuery)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer rows.Close()
+
+        orders := make([]*entities.Order, 0)
+        for rows.Next() </span><span class="cov8" title="1">{
+                order := new(entities.Order)
+                if err := rows.Scan(
+                        &amp;order.ID,
+                        &amp;order.UserID,
+                        &amp;order.Date,
+                ); err != nil </span><span class="cov8" title="1">{
+                        return nil, err
+                }</span>
+                <span class="cov8" title="1">orders = append(orders, order)</span>
+        }
+
+        <span class="cov8" title="1">if err := rows.Err(); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return orders, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file7" style="display: none">package repositories
+
+import (
+        "context"
+        "database/sql"
+
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/entities"
+)
+
+const (
+        createProductQuery string = `INSERT INTO products (id) VALUES ($1)`
+)
+
+type productRepository struct {
+        db *sql.DB
+}
+
+func NewProductRepository(db *sql.DB) *productRepository <span class="cov8" title="1">{
+        return &amp;productRepository{
+                db: db,
+        }
+}</span>
+
+func (r *productRepository) Add(product *entities.Product) error <span class="cov8" title="1">{
+        if _, err := r.db.ExecContext(
+                context.Background(),
+                createProductQuery,
+                product.ID,
+        ); err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file8" style="display: none">package repositories
+
+import (
+        "context"
+        "database/sql"
+
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/entities"
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/errors"
+)
+
+const (
+        getUserQuery    string = `SELECT * FROM users u WHERE u.id = $1 ORDER BY u.id DESC`
+        createUserQuery string = `INSERT INTO users (id, name) VALUES ($1, $2)`
+)
+
+type userRepository struct {
+        db *sql.DB
+}
+
+func NewUserRepository(db *sql.DB) *userRepository <span class="cov8" title="1">{
+        return &amp;userRepository{
+                db: db,
+        }
+}</span>
+
+func (r *userRepository) Get(id uint) (*entities.User, error) <span class="cov8" title="1">{
+        user := new(entities.User)
+        row := r.db.QueryRowContext(context.Background(), getUserQuery, id)
+        if err := row.Scan(
+                &amp;user.ID,
+                &amp;user.Name,
+        ); err != nil </span><span class="cov8" title="1">{
+                if err == sql.ErrNoRows </span><span class="cov8" title="1">{
+                        return nil, errors.ErrUserNotFound
+                }</span>
+
+                <span class="cov8" title="1">return nil, err</span>
+        }
+
+        <span class="cov8" title="1">if err := row.Err(); err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">return user, nil</span>
+}
+
+func (r *userRepository) Add(user *entities.User) error <span class="cov8" title="1">{
+        if _, err := r.db.ExecContext(
+                context.Background(),
+                createUserQuery,
+                user.ID,
+                user.Name,
+        ); err != nil </span><span class="cov8" title="1">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file9" style="display: none">package config
+
+import (
+        "os"
+
+        "github.com/joho/godotenv"
+)
+
+// LoadEnvs loads all the variables listed in the environment variables file
+func LoadEnvs() error <span class="cov0" title="0">{
+        if Env == nil </span><span class="cov0" title="0">{
+                if err := godotenv.Load(); err != nil </span><span class="cov0" title="0">{
+                        return err
+                }</span>
+
+                <span class="cov0" title="0">env := &amp;envVar{
+                        PostgresUser:     os.Getenv("POSTGRES_USER"),
+                        PostgresPassword: os.Getenv("POSTGRES_PASSWORD"),
+                        PostgresDb:       os.Getenv("POSTGRES_DB"),
+                        PostgresHost:     os.Getenv("POSTGRES_HOST"),
+                        PostgresPort:     os.Getenv("POSTGRES_PORT"),
+                        Port:             os.Getenv("PORT"),
+                }
+
+                Env = env</span>
+        }
+
+        <span class="cov0" title="0">return nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file10" style="display: none">package order
+
+import (
+        "time"
+
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/entities"
+)
+
+type Response struct {
+        ID     uint      `json:"id"`
+        UserID uint      `json:"user_id"`
+        Date   time.Time `json:"date"`
+}
+
+type PurchaseResponse struct {
+        UserID uint             `json:"user_id"`
+        Name   string           `json:"name"`
+        Orders []*OrderResponse `json:"orders"`
+}
+
+type OrderResponse struct {
+        OrderID  uint               `json:"order_id"`
+        Total    float64            `json:"total"`
+        Date     time.Time          `json:"date"`
+        Products []*ProductResponse `json:"products"`
+}
+
+type ProductResponse struct {
+        ProductID uint    `json:"product_id"`
+        Value     float64 `json:"value"`
+}
+
+func FromOrderToResponse(order *entities.Order) *Response <span class="cov0" title="0">{
+        return &amp;Response{
+                ID:     order.ID,
+                UserID: order.UserID,
+                Date:   order.Date,
+        }
+}</span>
+
+func FromPurchaseToResponse(purchase *Purchase) *PurchaseResponse <span class="cov0" title="0">{
+        productsRes := make([]*ProductResponse, 0)
+        for _, product := range purchase.Products </span><span class="cov0" title="0">{
+                productRes := &amp;ProductResponse{
+                        ProductID: product.ID,
+                        Value:     product.Value,
+                }
+
+                productsRes = append(productsRes, productRes)
+        }</span>
+
+        // ordersRes := make([]*OrderResponse, 0)
+        // orderRes := &amp;OrderResponse{
+        //         OrderID:  purchase.Order.ID,
+        //         Total:    purchase.Total,
+        //         Date:     purchase.Order.Date,
+        //         Products: productsRes,
+        // }
+
+        <span class="cov0" title="0">res := &amp;PurchaseResponse{
+                UserID: purchase.UserID,
+                Name:   purchase.Name,
+                Orders: []*OrderResponse{
+                        {
+                                OrderID:  purchase.Order.ID,
+                                Total:    purchase.Total,
+                                Date:     purchase.Order.Date,
+                                Products: productsRes,
+                        },
+                },
+        }
+
+        return res</span>
+}
+</pre>
+		
+		<pre class="file" id="file11" style="display: none">// Code generated by MockGen. DO NOT EDIT.
+// Source: internal/domain/order/repository.go
+//
+// Generated by this command:
+//
+//        mockgen -source=internal/domain/order/repository.go -destination=internal/domain/services/mocks/order/mock_order_repository.go -package=order
+//
+
+// Package order is a generated GoMock package.
+package order
+
+import (
+        reflect "reflect"
+        time "time"
+
+        entities "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/entities"
+        gomock "go.uber.org/mock/gomock"
+)
+
+// MockRepository is a mock of Repository interface.
+type MockRepository struct {
+        ctrl     *gomock.Controller
+        recorder *MockRepositoryMockRecorder
+        isgomock struct{}
+}
+
+// MockRepositoryMockRecorder is the mock recorder for MockRepository.
+type MockRepositoryMockRecorder struct {
+        mock *MockRepository
+}
+
+// NewMockRepository creates a new mock instance.
+func NewMockRepository(ctrl *gomock.Controller) *MockRepository <span class="cov0" title="0">{
+        mock := &amp;MockRepository{ctrl: ctrl}
+        mock.recorder = &amp;MockRepositoryMockRecorder{mock}
+        return mock
+}</span>
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder <span class="cov0" title="0">{
+        return m.recorder
+}</span>
+
+// Add mocks base method.
+func (m *MockRepository) Add(order *entities.Order) error <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "Add", order)
+        ret0, _ := ret[0].(error)
+        return ret0
+}</span>
+
+// Add indicates an expected call of Add.
+func (mr *MockRepositoryMockRecorder) Add(order any) *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockRepository)(nil).Add), order)
+}</span>
+
+// Get mocks base method.
+func (m *MockRepository) Get(id uint) (*entities.Order, error) <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "Get", id)
+        ret0, _ := ret[0].(*entities.Order)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}</span>
+
+// Get indicates an expected call of Get.
+func (mr *MockRepositoryMockRecorder) Get(id any) *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockRepository)(nil).Get), id)
+}</span>
+
+// GetAll mocks base method.
+func (m *MockRepository) GetAll() ([]*entities.Order, error) <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "GetAll")
+        ret0, _ := ret[0].([]*entities.Order)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}</span>
+
+// GetAll indicates an expected call of GetAll.
+func (mr *MockRepositoryMockRecorder) GetAll() *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockRepository)(nil).GetAll))
+}</span>
+
+// GetByInterval mocks base method.
+func (m *MockRepository) GetByInterval(startDate, endDate time.Time) ([]*entities.Order, error) <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "GetByInterval", startDate, endDate)
+        ret0, _ := ret[0].([]*entities.Order)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}</span>
+
+// GetByInterval indicates an expected call of GetByInterval.
+func (mr *MockRepositoryMockRecorder) GetByInterval(startDate, endDate any) *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByInterval", reflect.TypeOf((*MockRepository)(nil).GetByInterval), startDate, endDate)
+}</span>
+</pre>
+		
+		<pre class="file" id="file12" style="display: none">// Code generated by MockGen. DO NOT EDIT.
+// Source: internal/domain/order_products/repository.go
+//
+// Generated by this command:
+//
+//        mockgen -source=internal/domain/order_products/repository.go -destination=internal/domain/services/mocks/order_products/mock_order_products_repository.go -package=orderproducts
+//
+
+// Package orderproducts is a generated GoMock package.
+package orderproducts
+
+import (
+        reflect "reflect"
+
+        entities "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/entities"
+        gomock "go.uber.org/mock/gomock"
+)
+
+// MockRepository is a mock of Repository interface.
+type MockRepository struct {
+        ctrl     *gomock.Controller
+        recorder *MockRepositoryMockRecorder
+        isgomock struct{}
+}
+
+// MockRepositoryMockRecorder is the mock recorder for MockRepository.
+type MockRepositoryMockRecorder struct {
+        mock *MockRepository
+}
+
+// NewMockRepository creates a new mock instance.
+func NewMockRepository(ctrl *gomock.Controller) *MockRepository <span class="cov0" title="0">{
+        mock := &amp;MockRepository{ctrl: ctrl}
+        mock.recorder = &amp;MockRepositoryMockRecorder{mock}
+        return mock
+}</span>
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder <span class="cov0" title="0">{
+        return m.recorder
+}</span>
+
+// Add mocks base method.
+func (m *MockRepository) Add(orderProduct *entities.OrderProduct) error <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "Add", orderProduct)
+        ret0, _ := ret[0].(error)
+        return ret0
+}</span>
+
+// Add indicates an expected call of Add.
+func (mr *MockRepositoryMockRecorder) Add(orderProduct any) *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockRepository)(nil).Add), orderProduct)
+}</span>
+
+// GetByOrderID mocks base method.
+func (m *MockRepository) GetByOrderID(orderId uint) ([]*entities.OrderProduct, error) <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "GetByOrderID", orderId)
+        ret0, _ := ret[0].([]*entities.OrderProduct)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}</span>
+
+// GetByOrderID indicates an expected call of GetByOrderID.
+func (mr *MockRepositoryMockRecorder) GetByOrderID(orderId any) *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByOrderID", reflect.TypeOf((*MockRepository)(nil).GetByOrderID), orderId)
+}</span>
+</pre>
+		
+		<pre class="file" id="file13" style="display: none">// Code generated by MockGen. DO NOT EDIT.
+// Source: internal/domain/product/repository.go
+//
+// Generated by this command:
+//
+//        mockgen -source=internal/domain/product/repository.go -destination=internal/domain/services/mocks/product/mock_product_repository.go -package=product
+//
+
+// Package product is a generated GoMock package.
+package product
+
+import (
+        reflect "reflect"
+
+        entities "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/entities"
+        gomock "go.uber.org/mock/gomock"
+)
+
+// MockRepository is a mock of Repository interface.
+type MockRepository struct {
+        ctrl     *gomock.Controller
+        recorder *MockRepositoryMockRecorder
+        isgomock struct{}
+}
+
+// MockRepositoryMockRecorder is the mock recorder for MockRepository.
+type MockRepositoryMockRecorder struct {
+        mock *MockRepository
+}
+
+// NewMockRepository creates a new mock instance.
+func NewMockRepository(ctrl *gomock.Controller) *MockRepository <span class="cov0" title="0">{
+        mock := &amp;MockRepository{ctrl: ctrl}
+        mock.recorder = &amp;MockRepositoryMockRecorder{mock}
+        return mock
+}</span>
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder <span class="cov0" title="0">{
+        return m.recorder
+}</span>
+
+// Add mocks base method.
+func (m *MockRepository) Add(product *entities.Product) error <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "Add", product)
+        ret0, _ := ret[0].(error)
+        return ret0
+}</span>
+
+// Add indicates an expected call of Add.
+func (mr *MockRepositoryMockRecorder) Add(product any) *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockRepository)(nil).Add), product)
+}</span>
+</pre>
+		
+		<pre class="file" id="file14" style="display: none">// Code generated by MockGen. DO NOT EDIT.
+// Source: internal/domain/user/repository.go
+//
+// Generated by this command:
+//
+//        mockgen -source=internal/domain/user/repository.go -destination=internal/domain/services/mocks/user/mock_user_repository.go -package=user
+//
+
+// Package user is a generated GoMock package.
+package user
+
+import (
+        reflect "reflect"
+
+        entities "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/entities"
+        gomock "go.uber.org/mock/gomock"
+)
+
+// MockRepository is a mock of Repository interface.
+type MockRepository struct {
+        ctrl     *gomock.Controller
+        recorder *MockRepositoryMockRecorder
+        isgomock struct{}
+}
+
+// MockRepositoryMockRecorder is the mock recorder for MockRepository.
+type MockRepositoryMockRecorder struct {
+        mock *MockRepository
+}
+
+// NewMockRepository creates a new mock instance.
+func NewMockRepository(ctrl *gomock.Controller) *MockRepository <span class="cov0" title="0">{
+        mock := &amp;MockRepository{ctrl: ctrl}
+        mock.recorder = &amp;MockRepositoryMockRecorder{mock}
+        return mock
+}</span>
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockRepository) EXPECT() *MockRepositoryMockRecorder <span class="cov0" title="0">{
+        return m.recorder
+}</span>
+
+// Add mocks base method.
+func (m *MockRepository) Add(user *entities.User) error <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "Add", user)
+        ret0, _ := ret[0].(error)
+        return ret0
+}</span>
+
+// Add indicates an expected call of Add.
+func (mr *MockRepositoryMockRecorder) Add(user any) *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Add", reflect.TypeOf((*MockRepository)(nil).Add), user)
+}</span>
+
+// Get mocks base method.
+func (m *MockRepository) Get(id uint) (*entities.User, error) <span class="cov0" title="0">{
+        m.ctrl.T.Helper()
+        ret := m.ctrl.Call(m, "Get", id)
+        ret0, _ := ret[0].(*entities.User)
+        ret1, _ := ret[1].(error)
+        return ret0, ret1
+}</span>
+
+// Get indicates an expected call of Get.
+func (mr *MockRepositoryMockRecorder) Get(id any) *gomock.Call <span class="cov0" title="0">{
+        mr.mock.ctrl.T.Helper()
+        return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockRepository)(nil).Get), id)
+}</span>
+</pre>
+		
+		<pre class="file" id="file15" style="display: none">package services
+
+import (
+        "time"
+
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/entities"
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/errors"
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/order"
+        orderproducts "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/order_products"
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/user"
+)
+
+type orderService struct {
+        repository              order.Repository
+        orderProductsRepository orderproducts.Repository
+        userRepository          user.Repository
+}
+
+func NewOrderService(
+        repository order.Repository,
+        orderProductsRepository orderproducts.Repository,
+        userRepository user.Repository,
+) *orderService <span class="cov8" title="1">{
+        return &amp;orderService{
+                repository:              repository,
+                orderProductsRepository: orderProductsRepository,
+                userRepository:          userRepository,
+        }
+}</span>
+
+func (s *orderService) GetOrderById(orderId uint) (*entities.Order, error) <span class="cov8" title="1">{
+        order, err := s.repository.Get(orderId)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">if order == nil || order.ID == 0 </span><span class="cov8" title="1">{
+                return nil, errors.ErrOrderNotFound
+        }</span>
+
+        <span class="cov8" title="1">return order, nil</span>
+}
+
+func (s *orderService) GetOrdersInInterval(startDate, endDate time.Time) ([]*entities.Order, error) <span class="cov8" title="1">{
+        if endDate.Before(startDate) </span><span class="cov8" title="1">{
+                return nil, errors.ErrInvalidDateInterval
+        }</span>
+
+        <span class="cov8" title="1">orders, err := s.repository.GetByInterval(startDate, endDate)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">if len(orders) == 0 </span><span class="cov8" title="1">{
+                return nil, errors.ErrNoOrders
+        }</span>
+
+        <span class="cov8" title="1">return orders, nil</span>
+}
+
+func (s *orderService) GetAllOrders() ([]*entities.Order, error) <span class="cov8" title="1">{
+        orders, err := s.repository.GetAll()
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">if len(orders) == 0 </span><span class="cov8" title="1">{
+                return nil, errors.ErrNoOrders
+        }</span>
+
+        <span class="cov8" title="1">return orders, nil</span>
+}
+
+func (s *orderService) GetAllOrdersProducts() ([]*order.Purchase, error) <span class="cov8" title="1">{
+        orders, err := s.GetAllOrders()
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">purchases := make([]*order.Purchase, 0)
+        for _, o := range orders </span><span class="cov8" title="1">{
+                u, err := s.userRepository.Get(o.UserID)
+                if err != nil </span><span class="cov8" title="1">{
+                        return nil, err
+                }</span>
+
+                <span class="cov8" title="1">ops, err := s.orderProductsRepository.GetByOrderID(o.ID)
+                if err != nil </span><span class="cov8" title="1">{
+                        return nil, err
+                }</span>
+
+                <span class="cov8" title="1">total := 0.0
+                for _, p := range ops </span><span class="cov8" title="1">{
+                        total += float64(p.Value)
+                }</span>
+
+                <span class="cov8" title="1">purchase := &amp;order.Purchase{
+                        UserID:   u.ID,
+                        Name:     u.Name,
+                        Order:    o,
+                        Products: ops,
+                        Total:    total,
+                }
+
+                purchases = append(purchases, purchase)</span>
+        }
+
+        <span class="cov8" title="1">return purchases, nil</span>
+}
+
+func (s *orderService) GetOrdersProductsByOrderId(orderId uint) ([]*order.Purchase, error) <span class="cov0" title="0">{
+        o, err := s.GetOrderById(orderId)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">u, err := s.userRepository.Get(o.UserID)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">ops, err := s.orderProductsRepository.GetByOrderID(o.ID)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">total := 0.0
+        for _, p := range ops </span><span class="cov0" title="0">{
+                total += float64(p.Value)
+        }</span>
+
+        <span class="cov0" title="0">purchase := &amp;order.Purchase{
+                UserID:   u.ID,
+                Name:     u.Name,
+                Order:    o,
+                Products: ops,
+                Total:    total,
+        }
+
+        return []*order.Purchase{
+                purchase,
+        }, nil</span>
+}
+
+func (s *orderService) GetOrdersProductsByInterval(startDate, endDate time.Time) ([]*order.Purchase, error) <span class="cov0" title="0">{
+        orders, err := s.GetOrdersInInterval(startDate, endDate)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+
+        <span class="cov0" title="0">purchases := make([]*order.Purchase, 0)
+        for _, o := range orders </span><span class="cov0" title="0">{
+                u, err := s.userRepository.Get(o.UserID)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+
+                <span class="cov0" title="0">ops, err := s.orderProductsRepository.GetByOrderID(o.ID)
+                if err != nil </span><span class="cov0" title="0">{
+                        return nil, err
+                }</span>
+
+                <span class="cov0" title="0">total := 0.0
+                for _, p := range ops </span><span class="cov0" title="0">{
+                        total += float64(p.Value)
+                }</span>
+
+                <span class="cov0" title="0">purchase := &amp;order.Purchase{
+                        UserID:   u.ID,
+                        Name:     u.Name,
+                        Order:    o,
+                        Products: ops,
+                        Total:    total,
+                }
+
+                purchases = append(purchases, purchase)</span>
+        }
+
+        <span class="cov0" title="0">return purchases, nil</span>
+}
+</pre>
+		
+		<pre class="file" id="file16" style="display: none">package services
+
+import (
+        "bufio"
+        "fmt"
+        "log"
+        "mime/multipart"
+        "strconv"
+        "strings"
+        "time"
+
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/entities"
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/errors"
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/order"
+        orderproducts "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/order_products"
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/product"
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/user"
+)
+
+type userService struct {
+        repository              user.Repository
+        orderRepository         order.Repository
+        productRepository       product.Repository
+        orderProductsRepository orderproducts.Repository
+}
+
+func NewUserService(
+        repository user.Repository,
+        orderRepository order.Repository,
+        productRepository product.Repository,
+        orderProductsRepository orderproducts.Repository,
+) *userService <span class="cov8" title="1">{
+        return &amp;userService{
+                repository:              repository,
+                orderRepository:         orderRepository,
+                productRepository:       productRepository,
+                orderProductsRepository: orderProductsRepository,
+        }
+}</span>
+
+func (s *userService) GetUserByID(userId uint) (*entities.User, error) <span class="cov8" title="1">{
+        user, err := s.repository.Get(userId)
+        if err != nil </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+
+        <span class="cov8" title="1">if user.ID == 0 &amp;&amp; user.Name == "" </span><span class="cov8" title="1">{
+                return nil, errors.ErrUserNotFound
+        }</span>
+
+        <span class="cov8" title="1">return user, nil</span>
+}
+
+func (s *userService) LoadUsersDataFile(file multipart.File) int <span class="cov8" title="1">{
+        scanner := bufio.NewScanner(file)
+        usersData := make([]*user.UserFileData, 0)
+        processedLines := 0
+
+        for scanner.Scan() </span><span class="cov8" title="1">{
+                line := scanner.Text()
+                processedLines++
+                userData := parseUserDataFromLine(line)
+                usersData = append(usersData, userData)
+        }</span>
+
+        <span class="cov8" title="1">for _, userData := range usersData </span><span class="cov8" title="1">{
+                // Users
+                user := &amp;entities.User{
+                        ID:   userData.UserID,
+                        Name: userData.UserName,
+                }
+
+                if err := s.repository.Add(user); err != nil </span><span class="cov8" title="1">{
+                        log.Printf("Failed to create user. Details: %s\n", err.Error())
+                }</span>
+
+                // Products
+                <span class="cov8" title="1">product := &amp;entities.Product{
+                        ID: userData.ProductID,
+                }
+
+                if err := s.productRepository.Add(product); err != nil </span><span class="cov8" title="1">{
+                        log.Printf("Failed to create product. Details: %s\n", err.Error())
+                }</span>
+
+                // Orders
+                <span class="cov8" title="1">order := &amp;entities.Order{
+                        ID:     userData.OrderID,
+                        UserID: user.ID,
+                        Date:   userData.OrderDate,
+                }
+
+                if err := s.orderRepository.Add(order); err != nil </span><span class="cov8" title="1">{
+                        log.Printf("Failed to create order. Details: %s\n", err.Error())
+                }</span>
+
+                // Orders and products related
+                <span class="cov8" title="1">orderProduct := &amp;entities.OrderProduct{
+                        OrderID:   order.ID,
+                        ProductID: product.ID,
+                        Value:     userData.ProductValue,
+                }
+
+                if err := s.orderProductsRepository.Add(orderProduct); err != nil </span><span class="cov8" title="1">{
+                        log.Printf("Failed to create product to order. Details: %s\n", err.Error())
+                }</span>
+        }
+
+        <span class="cov8" title="1">return processedLines</span>
+}
+
+func parseUserDataFromLine(line string) *user.UserFileData <span class="cov8" title="1">{
+        userID := strings.TrimSpace(line[0:10])
+        userName := strings.TrimSpace(line[10:55])
+        orderID := strings.TrimSpace(line[55:65])
+        productID := strings.TrimSpace(line[65:75])
+        productValue := strings.TrimSpace(line[75:87])
+        orderDate := strings.TrimSpace(line[87:95])
+
+        orderYear := orderDate[0:4]
+        orderMonth := orderDate[4:6]
+        orderDay := orderDate[6:8]
+        date := fmt.Sprintf("%s-%s-%s", orderYear, orderMonth, orderDay)
+
+        parsedUserId, err := strconv.ParseInt(userID, 10, 64)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Printf("Failed to parse user id [%s]. Details: %s\n", userID, err.Error())
+        }</span>
+
+        <span class="cov8" title="1">parsedOrderId, err := strconv.ParseInt(orderID, 10, 64)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Printf("Failed to parse order id [%s]. Details: %s\n", orderID, err.Error())
+        }</span>
+
+        <span class="cov8" title="1">parsedProductId, err := strconv.ParseInt(productID, 10, 64)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Printf("Failed to parse product id [%s]. Details: %s\n", productID, err.Error())
+        }</span>
+
+        <span class="cov8" title="1">parsedProductValue, err := strconv.ParseFloat(productValue, 64)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Printf("Failed to parse product value [%s]. Details: %s\n", productID, err.Error())
+        }</span>
+
+        <span class="cov8" title="1">parsedOrderDate, err := time.Parse(time.DateOnly, date)
+        if err != nil </span><span class="cov0" title="0">{
+                log.Printf("Failed to parse order date [%s]. Details: %s\n", date, err.Error())
+        }</span>
+
+        <span class="cov8" title="1">return &amp;user.UserFileData{
+                UserID:       uint(parsedUserId),
+                UserName:     userName,
+                OrderID:      uint(parsedOrderId),
+                ProductID:    uint(parsedProductId),
+                ProductValue: parsedProductValue,
+                OrderDate:    parsedOrderDate,
+        }</span>
+}
+</pre>
+		
+		<pre class="file" id="file17" style="display: none">package user
+
+import (
+        "time"
+
+        "github.com/tulioguaraldob/luizalabs-logistica-challenge/internal/domain/entities"
+)
+
+type UserFileData struct {
+        UserID       uint      `json:"user_id"`
+        UserName     string    `json:"user_name"`
+        OrderID      uint      `json:"order_id"`
+        ProductID    uint      `json:"product_id"`
+        ProductValue float64   `json:"product_value"`
+        OrderDate    time.Time `json:"order_date"`
+}
+
+type UserFileResponse struct {
+        Message        string `json:"message"`
+        ProcessedLines int    `json:"processed_lines"`
+}
+
+type Response struct {
+        ID   uint   `json:"id"`
+        Name string `json:"name"`
+}
+
+func FromUserToResponse(user *entities.User) *Response <span class="cov0" title="0">{
+        return &amp;Response{
+                ID:   user.ID,
+                Name: user.Name,
+        }
+}</span>
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

@@ -34,7 +34,7 @@ func (c *orderController) Get(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		o, err := c.service.GetOrderById(uint(id))
+		purchases, err := c.service.GetOrdersProductsByOrderId(uint(id))
 		if err != nil {
 			if err == errors.ErrOrderNotFound {
 				w.WriteHeader(http.StatusNotFound)
@@ -47,7 +47,12 @@ func (c *orderController) Get(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		res, err := json.Marshal(order.FromOrderToResponse(o))
+		purchaseRes := make([]*order.PurchaseResponse, 0)
+		for _, purchase := range purchases {
+			purchaseRes = append(purchaseRes, order.FromPurchaseToResponse(purchase))
+		}
+
+		res, err := json.Marshal(purchaseRes)
 		if err != nil {
 			w.WriteHeader(http.StatusFound)
 			w.Write([]byte(err.Error()))
@@ -60,7 +65,7 @@ func (c *orderController) Get(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if startDateStr != "" {
-		startDate, err := time.Parse("2006-01-02", startDateStr)
+		startDate, err := time.Parse(time.DateOnly, startDateStr)
 		if err != nil {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("Invalid startDate format. Expected 2006-01-02"))
@@ -69,7 +74,7 @@ func (c *orderController) Get(w http.ResponseWriter, r *http.Request) {
 
 		endDate := time.Now()
 		if endDateStr != "" {
-			parsedEndDate, err := time.Parse("2006-01-02", endDateStr)
+			parsedEndDate, err := time.Parse(time.DateOnly, endDateStr)
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
 				w.Write([]byte("Invalid endDate format. Expected 2006-01-02"))
@@ -79,7 +84,7 @@ func (c *orderController) Get(w http.ResponseWriter, r *http.Request) {
 			endDate = parsedEndDate
 		}
 
-		orders, err := c.service.GetOrdersInInterval(startDate, endDate)
+		purchases, err := c.service.GetOrdersProductsByInterval(startDate, endDate)
 		if err != nil {
 			if err == errors.ErrInvalidDateInterval {
 				w.WriteHeader(http.StatusBadRequest)
@@ -98,14 +103,14 @@ func (c *orderController) Get(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		ordersRes := make([]*order.Response, 0)
-		for _, o := range orders {
-			ordersRes = append(ordersRes, order.FromOrderToResponse(o))
+		purchaseRes := make([]*order.PurchaseResponse, 0)
+		for _, purchase := range purchases {
+			purchaseRes = append(purchaseRes, order.FromPurchaseToResponse(purchase))
 		}
 
-		res, err := json.Marshal(ordersRes)
+		res, err := json.Marshal(purchaseRes)
 		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
+			w.WriteHeader(http.StatusFound)
 			w.Write([]byte(err.Error()))
 			return
 		}
@@ -115,7 +120,7 @@ func (c *orderController) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	orders, err := c.service.GetAllOrders()
+	purchases, err := c.service.GetAllOrdersProducts()
 	if err != nil {
 		if err == errors.ErrInvalidDateInterval {
 			w.WriteHeader(http.StatusBadRequest)
@@ -134,14 +139,14 @@ func (c *orderController) Get(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ordersRes := make([]*order.Response, 0)
-	for _, o := range orders {
-		ordersRes = append(ordersRes, order.FromOrderToResponse(o))
+	purchaseRes := make([]*order.PurchaseResponse, 0)
+	for _, purchase := range purchases {
+		purchaseRes = append(purchaseRes, order.FromPurchaseToResponse(purchase))
 	}
 
-	res, err := json.Marshal(ordersRes)
+	res, err := json.Marshal(purchaseRes)
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusFound)
 		w.Write([]byte(err.Error()))
 		return
 	}

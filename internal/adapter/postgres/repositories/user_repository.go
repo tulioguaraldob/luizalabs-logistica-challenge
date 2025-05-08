@@ -9,9 +9,8 @@ import (
 )
 
 const (
-	getUserQuery          string = `SELECT * FROM users u WHERE u.id = $1 ORDER BY u.id DESC`
-	createUserQuery       string = `INSERT INTO users (id, name) VALUES ($1, $2)`
-	createUserOrdersQuery string = `INSERT INTO users_orders (user_id, order_id) VALUES ($1, $2)`
+	getUserQuery    string = `SELECT * FROM users u WHERE u.id = $1 ORDER BY u.id DESC`
+	createUserQuery string = `INSERT INTO users (id, name) VALUES ($1, $2)`
 )
 
 type userRepository struct {
@@ -54,25 +53,5 @@ func (r *userRepository) Add(user *entities.User) error {
 	); err != nil {
 		return err
 	}
-	return nil
-}
-
-func (r *userRepository) AddUserOrder(userId uint, orders ...*entities.Order) error {
-	// Verify if there is any products to be related with the order
-	if len(orders) == 0 {
-		return errors.ErrEmptyOrders
-	}
-
-	for _, order := range orders {
-		if _, err := r.db.ExecContext(
-			context.Background(),
-			createUserOrdersQuery,
-			userId,
-			order.ID,
-		); err != nil {
-			return err
-		}
-	}
-
 	return nil
 }
