@@ -52,7 +52,7 @@ func main() {
 	oc := controllers.NewOrderController(ors)
 
 	mux := http.NewServeMux()
-	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
+	mux.HandleFunc("GET /healthcheck", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("I heard that Tulio was approved on LuizaLabs! :)"))
 	})

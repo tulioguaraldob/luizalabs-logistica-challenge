@@ -93,3 +93,13 @@ make run
 ```bash
 make docker-build
 ```
+
+## Endpoints:
+
+A aplicação possui 5 endpoints:
+
+* [GET] /healthcheck: Health check para verificar se o servidor está OK
+* [GET] /user/{id}: Busca o usuário pelo ID salvo na base
+* [POST] /user/upload: Endpoint o qual é feito upload do arquivo de dados por meio do Form Multipart, na key users_data
+* [GET] /order/{id}: Busca um pedido específico pelo ID salvo na base
+* [GET] /orders: Busca todos os pedidos, com possibilidade de filtrar por id, ou data de início e data final.
