@@ -1,0 +1,59 @@
+name: Generate code coverage badge
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    name: Generate and update coverage badge
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Setup go
+        uses: actions/setup-go@v4
+        with:
+          go-version-file: 'go.mod'
+
+      - name: Run Make Coverage
+        run: make cover
+
+      - name: Get Coverage Percentage
+        id: coverage
+        run: |
+          coverage_percent=$(go tool cover -func coverage/cover.out | tail -n 1 | awk '{print $3}' | sed 's/%//')
+          echo "coverage_percent=$coverage_percent" >> $GITHUB_OUTPUT
+
+      - name: Generate Coverage Badge
+        uses: skjorten/go-coverage-badge@v1.3
+        with:
+          coverageFile: coverage/cover.out
+          outputFile: README.md
+          countStatements: true
+
+      - name: Verify Changed files
+        uses: tj-actions/verify-changed-files@v16
+        id: verify-changed-files
+        with:
+          files: README.md
+
+      - name: Commit changes
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md
+          git commit -m "chore: Updated coverage badge."
+
+      - name: Push changes
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ github.token }}
+          branch: ${{ github.head_ref }}

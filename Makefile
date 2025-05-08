@@ -15,6 +15,7 @@ cover:
 	@echo Running test coverage...
 	@go test -v ./... -coverprofile=coverage/cover.out
 	@go tool cover -html coverage/cover.out -o coverage/cover.html
+	@go tool cover -func coverage/cover.out
 	@echo Test coverage successfully!
 
 run:
