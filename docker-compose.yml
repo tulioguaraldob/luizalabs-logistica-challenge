@@ -9,3 +9,15 @@ services:
 
     ports:
       - ${POSTGRES_PORT}:5432
+
+  app:
+    build: .
+    container_name: go-labs-app
+    env_file:
+      - .env
+    
+    ports:
+      - ${PORT}:${PORT}
+    depends_on:
+      - db
+    network_mode: host

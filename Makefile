@@ -1,6 +1,6 @@
 setup:
 	@echo Running setup...
-	@docker-compose up -d
+	@docker-compose up db -d
 
 install:
 	@echo Installing dependencies...
@@ -20,3 +20,7 @@ cover:
 
 run:
 	@go run cmd/main.go
+
+docker-build:
+	@echo Running Docker build:
+	@docker-compose up app -d
